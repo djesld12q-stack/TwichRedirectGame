@@ -56,7 +56,7 @@
     <div style="font-size:64px;margin-bottom:12px;">✅</div>
     <span class="badge badge-ok">Авторизовано!</span>
     <h1>Токен збережено</h1>
-    <p class="sub">Повертаємось у Stream Slots… 🎰</p>
+    <p class="sub">Повертаємось у гру… 🎰</p>
     <div class="footer">Stream Slots · Twitch Auth</div>
   </div>
 
@@ -74,6 +74,8 @@
   const LS_TOKEN     = 'twitch_token';
   const LS_LOGIN     = 'twitch_login';
   const LS_RETURN_TO = 'twitch_return_to';
+  // Fallback якщо return_to не збережено
+  const GAME_URL     = 'https://djesld12q-stack.github.io/pixel-invaders/';
 
   function show(id) {
     ['state-loading','state-ok','state-err']
@@ -94,7 +96,7 @@
       return;
     }
 
-    // Прибираємо токен з URL
+    // Прибираємо токен з URL (безпека)
     history.replaceState(null, '', window.location.pathname);
 
     // Валідуємо і дістаємо login
@@ -109,15 +111,14 @@
       }
     } catch (_) {}
 
-    // Зберігаємо в localStorage (обидві сторінки на github.io — shared!)
+    // Зберігаємо в localStorage
     localStorage.setItem(LS_TOKEN, token);
     if (login) localStorage.setItem(LS_LOGIN, login);
 
     show('state-ok');
 
-    // Повертаємось назад до слотів
-    const returnTo = localStorage.getItem(LS_RETURN_TO)
-      || 'https://djesld12q-stack.github.io/';
+    // Повертаємось назад до гри
+    const returnTo = localStorage.getItem(LS_RETURN_TO) || GAME_URL;
     localStorage.removeItem(LS_RETURN_TO);
 
     setTimeout(() => { window.location.href = returnTo; }, 1200);
